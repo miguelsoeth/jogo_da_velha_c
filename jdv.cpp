@@ -8,6 +8,18 @@ void func_titulo() {
 	printf("\tJOGO DA VELHA!\n\n");
 }
 
+void clearScreen() {
+    COORD topLeft = {0, 0};
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO screen;
+    DWORD written;
+
+    GetConsoleScreenBufferInfo(console, &screen);
+    FillConsoleOutputCharacterA(console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE, screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    SetConsoleCursorPosition(console, topLeft);
+}
+
 void func_tabuleiro(char LETRAS[3][3]) {
 	printf("\t  A   B   C\n");
 	for(int i=0; i < 3; i++) {
@@ -60,8 +72,10 @@ void func_marcador(char LETRAS[3][3], int *CONTADOR, char *MARCADOR, char COORD_
 		LETRAS[COORD_NUM-1][COORD_LTR-65]=*MARCADOR;
 	} else {
 		do {
-			printf("Ja marcado, tente novamente: ");
+			printf("Ja marcado, tente novamente...\n\n");
+			func_tabuleiro(LETRAS);
 			func_entrada(&COORD_LTR, &COORD_NUM);
+			clearScreen();
 		} while (LETRAS[COORD_NUM-1][COORD_LTR-65]!='\0');
 		func_marcador(LETRAS, CONTADOR, MARCADOR, COORD_LTR, COORD_NUM);
 		(*CONTADOR)--;
@@ -133,18 +147,6 @@ void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
 		strcpy(MARCADOR_2, "CRUZ");
 	}
 	printf("%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
-}
-
-void clearScreen() {
-    COORD topLeft = {0, 0};
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO screen;
-    DWORD written;
-
-    GetConsoleScreenBufferInfo(console, &screen);
-    FillConsoleOutputCharacterA(console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
-    FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE, screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
-    SetConsoleCursorPosition(console, topLeft);
 }
 
 main () {
