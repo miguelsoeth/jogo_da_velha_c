@@ -5,7 +5,7 @@
 #include <windows.h>
 
 void func_titulo() {
-	printf("\tJOGO DA VELHA!\n");
+	printf("\tJOGO DA VELHA!\n\n");
 }
 
 void func_tabuleiro(char LETRAS[3][3]) {
@@ -36,6 +36,7 @@ void func_inicializa_valores(char LETRAS[3][3]) {
 }
 
 void func_entrada(char *COORD_LTR, int *COORD_NUM) {
+	printf("\nDigite a jogada: ");
 	scanf("%c%d", &(*COORD_LTR), &(*COORD_NUM));
 	fflush(stdin);
 	*COORD_LTR=toupper((*COORD_LTR));
@@ -108,16 +109,16 @@ void func_resultado(bool GANHADOR, char MARCADOR) {
 	if (GANHADOR==true) {
 		switch (MARCADOR) {
 			case 'O': {
-				printf("O ganhador foi a bolinha!\n");
+				printf("\nO ganhador foi a bolinha!\n\n");
 				break;			
 			}
 			case 'X': {
-				printf("O ganhador foi a cruz!\n");
+				printf("\nO ganhador foi a cruz!\n\n");
 				break;
 			}
 		}	
 	} else {
-		printf("Deu velha!\n");
+		printf("\nDeu velha!\n\n");
 	}	
 	system("pause");
 }
@@ -131,7 +132,7 @@ void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
 		strcpy(MARCADOR_1, "BOLINHA");
 		strcpy(MARCADOR_2, "CRUZ");
 	}
-	printf("%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
+	printf("%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
 }
 
 void clearScreen() {
