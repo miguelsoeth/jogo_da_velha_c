@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 void func_titulo() {
@@ -106,17 +107,30 @@ void func_resultado(bool GANHADOR, char MARCADOR) {
 	if (GANHADOR==true) {
 		switch (MARCADOR) {
 			case 'O': {
-				printf("O ganhador foi a bolinha!");
+				printf("O ganhador foi a bolinha!\n");
 				break;			
 			}
 			case 'X': {
-				printf("O ganhador foi a cruz!");
+				printf("O ganhador foi a cruz!\n");
 				break;
 			}
 		}	
 	} else {
-		printf("Deu velha!");
+		printf("Deu velha!\n");
 	}	
+	system("pause");
+}
+
+void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
+	char MARCADOR_1[10], MARCADOR_2[10];
+	if (CONTADOR%2==0) {
+		strcpy(MARCADOR_1, "XIS");
+		strcpy(MARCADOR_2, "BOLINHA");
+	} else {
+		strcpy(MARCADOR_1, "BOLINHA");
+		strcpy(MARCADOR_2, "XIS");
+	}
+	printf("\n\n%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
 }
 
 main () {
@@ -127,9 +141,10 @@ main () {
 	func_inicializa_valores(LETRAS);
 	func_tabuleiro(LETRAS);
 	do {
+		
 		func_entrada(&COORD_LTR, &COORD_NUM);
 		func_marcador(LETRAS, &CONTADOR, &MARCADOR, COORD_LTR, COORD_NUM);
-		printf("JOGADA: %d\n", CONTADOR);
+		func_imprime_jogada(CONTADOR, COORD_LTR, COORD_NUM);		
 		func_tabuleiro(LETRAS);
 		GANHADOR = func_ganhou(LETRAS);
 	} while (CONTADOR<9 && GANHADOR==false);
