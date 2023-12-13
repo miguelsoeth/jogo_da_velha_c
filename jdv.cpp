@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 
 void func_titulo() {
 	printf("\tJOGO DA VELHA!\n");
@@ -124,13 +125,25 @@ void func_resultado(bool GANHADOR, char MARCADOR) {
 void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
 	char MARCADOR_1[10], MARCADOR_2[10];
 	if (CONTADOR%2==0) {
-		strcpy(MARCADOR_1, "XIS");
+		strcpy(MARCADOR_1, "CRUZ");
 		strcpy(MARCADOR_2, "BOLINHA");
 	} else {
 		strcpy(MARCADOR_1, "BOLINHA");
-		strcpy(MARCADOR_2, "XIS");
+		strcpy(MARCADOR_2, "CRUZ");
 	}
-	printf("\n\n%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
+	printf("%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
+}
+
+void clearScreen() {
+    COORD topLeft = {0, 0};
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO screen;
+    DWORD written;
+
+    GetConsoleScreenBufferInfo(console, &screen);
+    FillConsoleOutputCharacterA(console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE, screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    SetConsoleCursorPosition(console, topLeft);
 }
 
 main () {
@@ -141,8 +154,8 @@ main () {
 	func_inicializa_valores(LETRAS);
 	func_tabuleiro(LETRAS);
 	do {
-		
 		func_entrada(&COORD_LTR, &COORD_NUM);
+		clearScreen();
 		func_marcador(LETRAS, &CONTADOR, &MARCADOR, COORD_LTR, COORD_NUM);
 		func_imprime_jogada(CONTADOR, COORD_LTR, COORD_NUM);		
 		func_tabuleiro(LETRAS);
