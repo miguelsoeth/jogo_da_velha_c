@@ -4,6 +4,40 @@
 #include <ctype.h>
 #include <windows.h>
 
+void func_titulo();
+void clearScreen();
+void func_tabuleiro(char LETRAS[3][3]);
+void func_inicializa_valores(char LETRAS[3][3]);
+void func_entrada(char *COORD_LTR, int *COORD_NUM);
+void func_marcador(char LETRAS[3][3], int *CONTADOR, char *MARCADOR, char COORD_LTR, int COORD_NUM);
+bool func_ganhou(char LETRAS[3][3]);
+void func_resultado(bool GANHADOR, char MARCADOR, int *again);
+void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM);
+
+main () {
+	char LETRAS[3][3]; char COORD_LTR; int COORD_NUM;
+	int CONTADOR; char MARCADOR; bool GANHADOR;
+	
+	int again;
+	
+	do {
+		CONTADOR=0;
+		func_titulo();
+		func_inicializa_valores(LETRAS);
+		func_tabuleiro(LETRAS);
+		do {
+			func_entrada(&COORD_LTR, &COORD_NUM);
+			clearScreen();
+			func_marcador(LETRAS, &CONTADOR, &MARCADOR, COORD_LTR, COORD_NUM);
+			func_imprime_jogada(CONTADOR, COORD_LTR, COORD_NUM);
+			func_tabuleiro(LETRAS);
+			GANHADOR = func_ganhou(LETRAS);
+		} while (CONTADOR<9 && GANHADOR==false);
+		func_resultado(GANHADOR, MARCADOR, &again);			
+	} while (again == 1);
+	system("pause");
+}
+
 void func_titulo() {
 	printf("\tJOGO DA VELHA!\n\n");
 }
@@ -49,8 +83,10 @@ void func_inicializa_valores(char LETRAS[3][3]) {
 
 void func_entrada(char *COORD_LTR, int *COORD_NUM) {
 	printf("\nDigite a jogada: ");
+	fflush(stdin);
 	scanf("%c%d", &(*COORD_LTR), &(*COORD_NUM));
 	fflush(stdin);
+	//printf("LETRA: %c NUMERO: %d\n", *COORD_LTR, *COORD_NUM);
 	*COORD_LTR=toupper((*COORD_LTR));
 	if (*COORD_LTR != 'A' && *COORD_LTR != 'B' && *COORD_LTR != 'C') {
 		printf("Letra invalida, tente novamente: ");
@@ -119,7 +155,7 @@ bool func_ganhou(char LETRAS[3][3]) {
 	return false;
 }
 
-void func_resultado(bool GANHADOR, char MARCADOR) {
+void func_resultado(bool GANHADOR, char MARCADOR, int *again) {
 	if (GANHADOR==true) {
 		switch (MARCADOR) {
 			case 'O': {
@@ -133,8 +169,27 @@ void func_resultado(bool GANHADOR, char MARCADOR) {
 		}	
 	} else {
 		printf("\nDeu velha!\n\n");
-	}	
-	system("pause");
+	}
+	
+	do {
+		printf("Digite 1 para jogar novamente ou 2 para sair: ");
+		scanf("%d", &(*again));
+		switch(*again) {
+			case 1: {
+				clearScreen();
+				break;
+			}
+			case 2: {
+				printf("\nSaindo...");
+				break;
+			}
+			default: {
+				printf("Opcao invalida!\n");
+				break;
+			}
+		}	
+	} while (*again !=2 && *again !=1);
+	
 }
 
 void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
@@ -147,22 +202,4 @@ void func_imprime_jogada(int CONTADOR, char COORD_LTR, int COORD_NUM) {
 		strcpy(MARCADOR_2, "CRUZ");
 	}
 	printf("%d | %s JOGOU %c%d, QUEM JOGA AGORA E: %s\n\n", CONTADOR, MARCADOR_1, COORD_LTR, COORD_NUM, MARCADOR_2);
-}
-
-main () {
-	char LETRAS[3][3]; char COORD_LTR; int COORD_NUM;
-	int CONTADOR=0; char MARCADOR; bool GANHADOR;
-	
-	func_titulo();
-	func_inicializa_valores(LETRAS);
-	func_tabuleiro(LETRAS);
-	do {
-		func_entrada(&COORD_LTR, &COORD_NUM);
-		clearScreen();
-		func_marcador(LETRAS, &CONTADOR, &MARCADOR, COORD_LTR, COORD_NUM);
-		func_imprime_jogada(CONTADOR, COORD_LTR, COORD_NUM);		
-		func_tabuleiro(LETRAS);
-		GANHADOR = func_ganhou(LETRAS);
-	} while (CONTADOR<9 && GANHADOR==false);
-	func_resultado(GANHADOR, MARCADOR);
 }
